@@ -1,0 +1,22 @@
+const { createClient } = require('@supabase/supabase-js');
+
+// Initialize Supabase client
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+async function getTotalVotes() {
+  const { data, error } = await supabase
+    .from('votes')
+    .select('election_id, count(*) AS total_votes')
+    .eq('election_id', 'd2b548e0-cc3b-4e8e-a9a9-b569317157c2')
+    .group('election_id');
+
+  if (error) {
+    console.error('Error fetching total votes:', error);
+  } else {
+    console.log('Total votes:', data);
+  }
+}
+
+getTotalVotes();
