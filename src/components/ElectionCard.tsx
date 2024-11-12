@@ -123,8 +123,8 @@ export const ElectionCardSkeleton: React.FC = () => {
     <div className="flex items-center h-4 bg-gray-200 rounded"></div>
   </div>
   <div className="flex space-x-2">
-    <div className="flex-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-200 text-center h-10 bg-gray-200"></div>
-    <div className="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 text-center h-10 bg-gray-200"></div>
+    <div className="flex-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-200 text-center h-10"></div>
+    <div className="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700  hover:bg-gray-50 text-center h-10 bg-gray-200"></div>
   </div>
 </div>
   );

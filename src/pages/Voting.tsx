@@ -12,6 +12,7 @@ export const Voting: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [votes, setVotes] = useState<Record<string, string>>({});
   const voterId = sessionStorage.getItem('voter_id');
+  const [isSubmitting,setIsSubmitting] = useState(false)
 
   const { data: portfolios, isLoading } = useQuery<
     (Portfolio & { candidates: Candidate[] })[]
@@ -32,9 +33,31 @@ export const Voting: React.FC = () => {
   });
 
   useEffect(() => {
-    if (!voterId) {
-      navigate(`/vote/${electionId}/auth`);
-    }
+    const checkVoterStatus = async () => {
+      if (!voterId) {
+        navigate(`/vote/${electionId}/auth`);
+        return;
+      }
+
+      try {
+        const { data: voterData, error: voterCheckError } = await supabase
+          .from('voters')
+          .select('has_voted')
+          .eq('id', voterId)
+          .single();
+
+        if (voterCheckError) throw voterCheckError;
+
+        if (voterData?.has_voted) {
+          toast.error('You have already voted!');
+          navigate('/'); // Redirect to home page
+        }
+      } catch (error) {
+        toast.error('Failed to check voting status');
+      }
+    };
+
+    checkVoterStatus();
   }, [voterId, electionId, navigate]);
 
   const handleVote = (portfolioId: string, candidateId: string) => {
@@ -42,8 +65,15 @@ export const Voting: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (currentStep < (portfolios?.length || 0) - 1) {
-      setCurrentStep((prev) => prev + 1);
+    const currentPortfolio = portfolios?.[currentStep];
+    
+    if (currentPortfolio) {
+      if (currentPortfolio.candidates.length === 1) {
+        
+        setCurrentStep((prev) => prev + 1);
+      } else if (currentStep < (portfolios?.length || 0) - 1) {
+        setCurrentStep((prev) => prev + 1);
+      }
     }
   };
 
@@ -54,7 +84,22 @@ export const Voting: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    setIsSubmitting(true)
     try {
+
+      const { data: voterData, error: voterCheckError } = await supabase
+      .from('voters')
+      .select('has_voted')
+      .eq('id', voterId)
+      .single();
+
+    if (voterCheckError) throw voterCheckError;
+
+    if (voterData?.has_voted) {
+      toast.error('You have already voted!');
+      navigate('/');
+      return; 
+    }
       // Submit all votes
       const votesData = Object.entries(votes).map(([portfolioId, candidateId]) => ({
         election_id: electionId,
@@ -85,9 +130,12 @@ export const Voting: React.FC = () => {
     return <VotingStepSkeleton/>
   }
 
+
   const currentPortfolio = portfolios?.[currentStep];
   const isLastStep = currentStep === (portfolios?.length || 0) - 1;
-  const hasVotedForCurrent = currentPortfolio ? votes[currentPortfolio.id] : undefined;
+  const hasVotedForCurrent = currentPortfolio 
+    ? votes[currentPortfolio.id] !== undefined || currentPortfolio.candidates.length === 1
+    : undefined;
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -112,8 +160,9 @@ export const Voting: React.FC = () => {
             Back
           </button>
           
-          {isLastStep ? (
-            <button
+          {isLastStep ? 
+
+            !isSubmitting && <button
               type="button"
               onClick={handleSubmit}
               disabled={!hasVotedForCurrent}
@@ -121,7 +170,7 @@ export const Voting: React.FC = () => {
             >
               Submit Votes
             </button>
-          ) : (
+           : (
             <button
               type="button"
               onClick={handleNext}

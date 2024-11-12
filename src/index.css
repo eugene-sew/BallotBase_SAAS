@@ -9,3 +9,7 @@
 body {
   @apply antialiased text-gray-900;
 }
+
+input{
+  padding:6px 10px !important;
+}

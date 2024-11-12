@@ -20,7 +20,7 @@ export interface Portfolio {
   id: string;
   electionId: string;
   title: string;
-  isYesNo: boolean;
+  is_yes_no: boolean;
   createdAt: string;
 }
 

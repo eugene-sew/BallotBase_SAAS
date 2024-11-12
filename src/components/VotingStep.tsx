@@ -43,9 +43,15 @@ export const VotingStep: React.FC<VotingStepProps> = ({
         {portfolio.candidates.map((candidate) => (
           <button
             key={candidate.id}
-            onClick={() => onVote(portfolio.id, candidate.id)}
+            onClick={() => {
+              if (portfolio.is_yes_no) {
+                onVote(portfolio.id, candidate.id);
+              } else {
+                onVote(portfolio.id, candidate.id);
+              }
+            }}
             className={`p-4 border-2 rounded-lg transition-colors ${
-              selectedCandidate === candidate.id
+              selectedCandidate === candidate.id || (portfolio.is_yes_no && selectedCandidate === candidate.name)
                 ? 'border-primary bg-primary/5'
                 : 'border-gray-200 hover:border-primary'
             }`}
@@ -58,9 +64,9 @@ export const VotingStep: React.FC<VotingStepProps> = ({
               />
             )}
             <h3 className="text-lg font-medium">{candidate.name}</h3>
-            {portfolio.isYesNo && (
+            {portfolio.is_yes_no && (
               <p className="text-sm text-gray-500 mt-2">
-                Click to vote {candidate.name === 'Yes' ? 'YES' : 'NO'}
+                Click to vote Yes
               </p>
             )}
           </button>
