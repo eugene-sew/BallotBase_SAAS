@@ -4,9 +4,10 @@ import { CalendarIcon, UserGroupIcon, ShareIcon } from '@heroicons/react/24/outl
 import type { Election } from '../types';
 import { useAuth } from '../hooks/useAuth';
 import toast from 'react-hot-toast';
+
 interface ElectionCardProps {
   election: Election;
-  totalVotes:Promise<number>;
+  totalVotes: Promise<number>;
 }
 
 export const ElectionCard: React.FC<ElectionCardProps> = ({ election, totalVotes }) => {
@@ -14,15 +15,15 @@ export const ElectionCard: React.FC<ElectionCardProps> = ({ election, totalVotes
   const navigate = useNavigate();
   const isAdmin = user?.id === election.created_by;
   const [votes, setVotes] = useState<number | null>(null);
+  const [loadingShare, setLoadingShare] = useState<boolean>(false);
 
   const votingStarted = new Date(election.start_time) <= new Date();
 
   const handleShare = async () => {
+    const voteLink = `${window.location.origin}/vote/${election.id}/auth`;
+    setLoadingShare(true);
     try {
-      const voteLink = `${window.location.origin}/vote/${election.id}/auth`;
-      
-      // Example API call to send links (replace with your actual API endpoint)
-      await fetch('https://api.example.com/send-links', {
+      await fetch('https://ballotbaseotp.onrender.com/otp/share/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -31,9 +32,11 @@ export const ElectionCard: React.FC<ElectionCardProps> = ({ election, totalVotes
         })
       });
       
-      toast.success('Voting links sent successfully!');
+      toast.success('Voting link shared successfully!');
     } catch (error) {
-      toast.error('Failed to send voting links');
+      toast.error('Failed to share voting link');
+    } finally {
+      setLoadingShare(false);
     }
   };
 
@@ -47,10 +50,9 @@ export const ElectionCard: React.FC<ElectionCardProps> = ({ election, totalVotes
     totalVotes.then(setVotes).catch(() => setVotes(0));
   }, [totalVotes]);
 
-
   return (
     <div 
-     onClick={() => isAdmin && navigate(`/election/${election.id}`)}
+      onClick={() => isAdmin && navigate(`/election/${election.id}`)}
       className={`bg-white rounded-lg shadow-sm p-6 ${isAdmin ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
     >
       <h3 className="text-lg font-semibold mb-2">{election.name}</h3>
@@ -71,12 +73,6 @@ export const ElectionCard: React.FC<ElectionCardProps> = ({ election, totalVotes
       </div>
 
       <div className="flex space-x-2">
-        {/* <Link
-          to={`/vote/${election.id}/auth`}
-          className="flex-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 text-center"
-        >
-          Vote
-        </Link> */}
         {(isAdmin || election.is_published) && (
           <Link
             to={`/results/${election.id}`}
@@ -102,9 +98,15 @@ export const ElectionCard: React.FC<ElectionCardProps> = ({ election, totalVotes
                 e.stopPropagation();
                 handleShare();
               }}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              className="flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              disabled={loadingShare}
             >
-              <ShareIcon className="h-5 w-5" />
+              {loadingShare ? (
+                <span className="loader"></span>
+              ) : (
+                <ShareIcon className="h-5 w-5" />
+              )}
+              {loadingShare ? ' Sharing...' : ' Share'}
             </button>
           </>
         )}
