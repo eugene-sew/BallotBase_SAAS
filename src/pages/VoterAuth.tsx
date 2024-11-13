@@ -106,6 +106,7 @@ export const VoterAuth: React.FC = () => {
         },
         body: JSON.stringify({ 
           indexNumber: indexNumber, 
+          electionId: electionId
         }),
       });
 
@@ -116,8 +117,8 @@ export const VoterAuth: React.FC = () => {
         return;
       }
 
-      setRequestId(responseData.requestId); // Assuming response contains requestId
-      setPrefix(responseData.prefix); // Assuming response contains prefix
+      setRequestId(responseData.requestId); 
+      setPrefix(responseData.prefix); 
       setVoterData(voter);
       setStep(2);
       
@@ -150,7 +151,8 @@ export const VoterAuth: React.FC = () => {
             body: JSON.stringify({
                 indexNumber: voterData.index, 
                 code: data.otp,
-                uid: voterData.id 
+                uid: voterData.id,
+                electionId: electionId 
             }),
         });
 
