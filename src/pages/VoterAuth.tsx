@@ -74,6 +74,7 @@ export const VoterAuth: React.FC = () => {
     setIsLoading(true);
     const indexNumber = data.index.slice(1);
     console.log(indexNumber)
+    setStep(2);
     try {
       // First find voter record
       const { data: voter, error: voterError } = await supabase
@@ -82,7 +83,7 @@ export const VoterAuth: React.FC = () => {
         .eq('election_id', electionId)
         .eq('index', indexNumber)
         .single();
-
+        
       if (voterError || !voter) {
         toast.error('Invalid index number');
         return;
@@ -120,7 +121,6 @@ export const VoterAuth: React.FC = () => {
       setRequestId(responseData.requestId); 
       setPrefix(responseData.prefix); 
       setVoterData(voter);
-      setStep(2);
       
       if (responseData.message) {
         toast.success(responseData.message);
