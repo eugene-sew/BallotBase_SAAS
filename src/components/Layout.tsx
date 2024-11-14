@@ -23,11 +23,11 @@ export const Layout: React.FC = () => {
               <Link
                 to="/"
                 className="flex items-center">
-                <span className="text-2xl font-bold text-[#2ba6ff]">
-                  BallotBase
-                </span>
+                <h1 className="text-xl font-bold">
+                  <span className="text-blue-600">Ballot</span>Base
+                </h1>
               </Link>
-              <span className="text-sm text-gray-500">
+              <span className="text-xs text-gray-500">
                 Empowering Fair and Secure Elections
               </span>
             </div>
@@ -53,7 +53,7 @@ export const Layout: React.FC = () => {
                           className="w-8 h-8 rounded-full"
                         />
                       ) : (
-                        <div className="w-8 h-8 flex items-center justify-center bg-[#2ba6ff] text-white font-bold rounded-full">
+                        <div className="w-8 h-8 flex items-center justify-center bg-primary text-white font-bold rounded-full">
                           {getUserInitials(user.email)}
                         </div>
                       )}
@@ -62,7 +62,7 @@ export const Layout: React.FC = () => {
 
                     <button
                       onClick={signOut}
-                      className="bg-red-500 hover:bg-red-600 transition-colors text-white font-medium rounded shadow p-2">
+                      className="text-red-700 hover:text-red-600 transition-colors font-normal p-2">
                       Sign Out
                     </button>
                   </div>

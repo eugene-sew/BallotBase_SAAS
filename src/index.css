@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #2ba6ff;
+  --primary-color: #2563eb;
 }
 
 body {
   @apply antialiased text-gray-900;
 }
 
-input{
-  padding:6px 10px !important;
+input {
+  padding: 6px 10px !important;
 }
