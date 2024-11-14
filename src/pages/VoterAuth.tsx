@@ -77,8 +77,8 @@ export const VoterAuth: React.FC = () => {
     setIsOTPSending(true);
     const indexNumber = data.index.slice(1);
     console.log(indexNumber)
-    setStep(2);
     try {
+      setStep(2);
       // First find voter record
       const { data: voter, error: voterError } = await supabase
         .from('voters')

@@ -44,6 +44,7 @@ export const Voting: React.FC = () => {
           .from('voters')
           .select('has_voted')
           .eq('id', voterId)
+          .eq('election_id',electionId)
           .single();
 
         if (voterCheckError) throw voterCheckError;
@@ -91,6 +92,7 @@ export const Voting: React.FC = () => {
       .from('voters')
       .select('has_voted')
       .eq('id', voterId)
+      .eq('election_id',electionId)
       .single();
 
     if (voterCheckError) throw voterCheckError;
