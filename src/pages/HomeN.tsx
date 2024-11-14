@@ -103,14 +103,14 @@ const HomeN = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen absolute w-full right-0 left-0 top-20">
       {/* Hero Section */}
-      <div className="bg-gradient-to-b from-gray-50 to-white py-20 px-4">
+      <div className="bg-gradient-to-b from-gray-50 to-white py-20 px-4 magicpattern">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+          <h1 className="text-5xl font-bold mb-6">
             <span className="text-blue-600">Ballot</span>Base
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
             The trusted platform for secure digital voting and election
             management. Used by organizations worldwide to run transparent,
             efficient elections.
@@ -150,7 +150,7 @@ const HomeN = () => {
 
       {/* Features Grid */}
       <div className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4 md:px-10">
           <h2 className="text-3xl font-bold text-center mb-12">
             Everything you need for successful elections
           </h2>
@@ -219,7 +219,7 @@ const HomeN = () => {
       </div>
 
       <div className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4 md:px-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Information */}
             <div>
@@ -249,7 +249,9 @@ const HomeN = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Call Us</h3>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
+                    <p className="text-gray-600">
+                      +233 53 721 1043 / +233 55 227 4951{" "}
+                    </p>
                     <p className="text-sm text-gray-500 mt-1">
                       Mon-Fri from 9am to 6pm GMT
                     </p>
