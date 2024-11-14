@@ -69,9 +69,12 @@ export const VoterAuth: React.FC = () => {
     return `${phone.slice(0, 3)}****${phone.slice(-4)}`;
   };
 
+  const [isOTPSending, setIsOTPSending] = useState(false)
+
+  // send otp
   const handleIndexSubmit = async (data: IndexForm) => {
 
-    setIsLoading(true);
+    setIsOTPSending(true);
     const indexNumber = data.index.slice(1);
     console.log(indexNumber)
     setStep(2);
@@ -130,10 +133,11 @@ export const VoterAuth: React.FC = () => {
     } catch (error) {
       toast.error('Failed to send OTP');
     } finally {
-      setIsLoading(false);
+      setIsOTPSending(false);
     }
   };
 
+  // verify otp
   const handleOtpSubmit = async (data: OtpForm) => {
     if (!voterData) {
         toast.error('Voter data not found');
@@ -172,6 +176,7 @@ export const VoterAuth: React.FC = () => {
     }
   };
 
+  // resend otp
   const handleResendOtp = async () => {
     if (!voterData) {
       toast.error('Voter data not found');
@@ -179,32 +184,7 @@ export const VoterAuth: React.FC = () => {
     }
 
     setIsLoading(true);
-    try {
-      const { data: response, error } = await supabase.functions.invoke<OtpResponse>('resend-otp', {
-        body: { requestId }
-      });
-
-      if (error || !response) {
-        toast.error('Failed to resend OTP');
-        return;
-      }
-
-      // Update requestId and prefix from resend response
-      setRequestId(response.data.requestId);
-      setPrefix(response.data.prefix);
-      setCanResend(false);
-      setCountdown(300);
-
-      if (response.message) {
-        toast.success(response.message);
-      } else {
-        toast.success(`OTP resent to ${formatPhoneNumber(voterData.phone)}`);
-      }
-    } catch (error) {
-      toast.error('Failed to resend OTP');
-    } finally {
-      setIsLoading(false);
-    }
+    indexForm.handleSubmit(handleIndexSubmit)
   };
 
   return (
@@ -231,7 +211,7 @@ export const VoterAuth: React.FC = () => {
               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
             >
-              {isLoading ? 'Processing...' : 'Continue'}
+              {isOTPSending ? 'Processing...' : 'Continue'}
             </button>
           </form>
         ) : (

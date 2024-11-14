@@ -23,9 +23,10 @@ interface ReviewFormProps {
   };
   onBack: () => void;
   onSubmit: () => void;
+  isCreating:boolean;
 }
 
-export const ReviewForm: React.FC<ReviewFormProps> = ({ data, onBack, onSubmit }) => {
+export const ReviewForm: React.FC<ReviewFormProps> = ({ data, onBack, onSubmit, isCreating }) => {
   return (
     <div className="space-y-8">
       <div>
@@ -114,7 +115,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ data, onBack, onSubmit }
           className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90"
           disabled={data.voters.length === 0}
         >
-          Create Election
+          {isCreating?"Creating ...":"Create Election"}
         </button>
       </div>
     </div>

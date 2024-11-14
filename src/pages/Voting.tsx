@@ -120,7 +120,8 @@ export const Voting: React.FC = () => {
       if (voterError) throw voterError;
 
       toast.success('Thank you for voting!');
-      navigate('/');
+      
+      navigate(`/vote/${electionId}/thank-you`);
     } catch (error) {
       toast.error('Failed to submit votes');
     }

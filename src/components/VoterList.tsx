@@ -8,10 +8,12 @@ import type { Voter } from '../types';
 interface VoterListProps {
   voters: Voter[];
   electionId: string;
+  onUploadSuccess: ()=>void;
 }
 
-export const VoterList: React.FC<VoterListProps> = ({ voters, electionId }) => {
+export const VoterList: React.FC<VoterListProps> = ({ voters, electionId,onUploadSuccess }) => {
   const [showUpload, setShowUpload] = useState(false);
+  const [newlyAddedIndexes, setNewlyAddedIndexes] = useState<string[]>([]);
   const { register, handleSubmit } = useForm();
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,10 +33,26 @@ export const VoterList: React.FC<VoterListProps> = ({ voters, electionId }) => {
             year: row.year || '',
           }));
 
-          const { error } = await supabase.from('voters').insert(newVoters);
-          if (error) throw error;
+          const { data: existingVoters, error: fetchError } = await supabase
+            .from('voters')
+            .select('index')
+            .eq('election_id', electionId);
 
-          toast.success('Voters updated successfully');
+          if (fetchError) throw fetchError;
+
+          const existingIndexes = existingVoters.map((v) => v.index);
+          const freshVoters = newVoters.filter((voter) => !existingIndexes.includes(voter.index));
+
+          if (freshVoters.length > 0) {
+            const { error: insertError } = await supabase.from('voters').insert(freshVoters);
+            if (insertError) throw insertError;
+
+            toast.success('Voters updated successfully');
+            setNewlyAddedIndexes(freshVoters.map((voter) => voter.index));
+          } else {
+            toast.custom('No new voters to add');
+          }
+          onUploadSuccess()
           setShowUpload(false);
         } catch (error) {
           toast.error('Failed to update voters');
@@ -93,7 +111,14 @@ export const VoterList: React.FC<VoterListProps> = ({ voters, electionId }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {voters.map((voter) => (
-              <tr key={voter.id}>
+              <tr
+                key={voter.id}
+                className={
+                  newlyAddedIndexes.includes(voter.index)
+                    ? 'bg-yellow-100' // Highlight for new entries
+                    : ''
+                }
+              >
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{voter.index}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{voter.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{voter.phone}</td>

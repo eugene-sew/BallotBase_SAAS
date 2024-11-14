@@ -14,15 +14,18 @@ export const ElectionCard: React.FC<ElectionCardProps> = ({ election, totalVotes
   const navigate = useNavigate();
   const isAdmin = user?.id === election.created_by;
   const [votes, setVotes] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
 
+
+  const SHARE_URL = import.meta.env.VITE_SHARE_URL;
   const votingStarted = new Date(election.start_time) <= new Date();
 
   const handleShare = async () => {
+    setLoading(true)
     try {
       const voteLink = `${window.location.origin}/vote/${election.id}/auth`;
       
-      // Example API call to send links (replace with your actual API endpoint)
-      await fetch('https://api.example.com/send-links', {
+      await fetch(SHARE_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -35,6 +38,7 @@ export const ElectionCard: React.FC<ElectionCardProps> = ({ election, totalVotes
     } catch (error) {
       toast.error('Failed to send voting links');
     }
+    setLoading(false)
   };
 
   const handleCopyLink = () => {
@@ -102,10 +106,13 @@ export const ElectionCard: React.FC<ElectionCardProps> = ({ election, totalVotes
                 e.stopPropagation();
                 handleShare();
               }}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center"
             >
-              <ShareIcon className="h-5 w-5" />
-            </button>
+             {!loading? <ShareIcon className="h-5 w-5 mr-2" />
+             
+              :
+              <span className="ml-2 animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-r-white"></span>
+           } </button>
           </>
         )}
       </div>

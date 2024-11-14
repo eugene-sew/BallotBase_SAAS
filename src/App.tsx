@@ -13,6 +13,7 @@ import { VoterAuth } from './pages/VoterAuth';
 import { Voting } from './pages/Voting';
 import { Results } from './pages/Results';
 import { ElectionDetails } from './pages/ElectionDetails';
+import { ThankYou } from './pages/ThankYou';
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const router = createBrowserRouter(
       <Route path="vote/:electionId/auth" element={<VoterAuth />} />
       <Route path="vote/:electionId" element={<Voting />} />
       <Route path="results/:electionId" element={<Results />} />
+      <Route path="vote/:electionId/thank-you" element={<ThankYou />} />
     </Route>
   )
 );

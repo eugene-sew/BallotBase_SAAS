@@ -2,6 +2,7 @@ export interface User {
   id: string;
   email: string;
   planType: 'basic' | 'premium';
+  photoURL?: string;
 }
 
 export interface Election {

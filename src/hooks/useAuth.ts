@@ -81,7 +81,7 @@ export const useAuth = () => {
         throw profileError;
       }
 
-      // No need to fetch profile separately since we used .select()
+
       const { data: profile } = await supabase
         .from('users')
         .select()
