@@ -74,24 +74,28 @@ export const VoterAuth: React.FC = () => {
   // send otp
   const handleIndexSubmit = async (data: IndexForm) => {
     setIsOTPSending(true);
+
     // const indexNumber = data.index.slice(1);
-    const indexNumber = data.index;
+    const indexNumber = data.index.replace(/^0+/, "");
     console.log(indexNumber);
-    // setStep(2);
+
+    console.log(indexNumber);
 
     try {
-      // First find voter record
-      const { data: voter, error: voterError } = await supabase
+      const normalizedIndex = data.index.replace(/^0+/, "");
+      const indexWithLeadingZero = `0${normalizedIndex}`;
+      const { data: voters, error: voterError } = await supabase
         .from("voters")
         .select("*")
         .eq("election_id", electionId)
-        .eq("index", indexNumber)
-        .single();
+        .or(`index.eq.${normalizedIndex},index.eq.${indexWithLeadingZero}`);
 
-      if (voterError || !voter) {
+      if (voterError || !voters || voters.length === 0) {
         toast.error("Invalid index number");
         return;
       }
+
+      const voter = voters[0];
 
       if (voter.has_voted) {
         toast.error("You have already voted in this election");
@@ -164,7 +168,9 @@ export const VoterAuth: React.FC = () => {
 
       const verifyResponse = await response.json();
 
-      if (!response.ok) {
+      console.log(verifyResponse);
+
+      if (verifyResponse.code !== "1100") {
         toast.error("Invalid OTP code");
         return;
       }
