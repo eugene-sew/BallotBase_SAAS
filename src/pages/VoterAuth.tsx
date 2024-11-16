@@ -74,7 +74,8 @@ export const VoterAuth: React.FC = () => {
   // send otp
   const handleIndexSubmit = async (data: IndexForm) => {
     setIsOTPSending(true);
-    const indexNumber = data.index.slice(1);
+    // const indexNumber = data.index.slice(1);
+    const indexNumber = data.index;
     console.log(indexNumber);
     // setStep(2);
 
@@ -207,7 +208,7 @@ export const VoterAuth: React.FC = () => {
                 type="text"
                 {...indexForm.register("index")}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                placeholder="Enter your index number"
+                placeholder="0320000000"
                 disabled={isLoading}
               />
             </div>
