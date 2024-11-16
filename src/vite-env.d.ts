@@ -6,6 +6,8 @@ interface ImportMetaEnv {
     readonly VITE_VERIFY_OTP: string;
     readonly VITE_SUPABASE_URL: string;
     readonly VITE_SUPABASE_ANON_KEY: string;
+    readonly VITE_ARKESEL_API_KEY: string;
+    readonly VITE_ARKESEL_API_URL: string;
 }
 
 interface ImportMeta {

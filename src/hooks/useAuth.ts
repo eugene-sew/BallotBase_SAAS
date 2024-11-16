@@ -46,7 +46,7 @@ export const useAuth = () => {
     if (error) throw error;
   };
 
-  const signUp = async (email: string, password: string, planType: 'basic' | 'premium') => {
+  const signUp = async (email: string, password: string, planType: 'basic' | 'premium', phone: string) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -70,6 +70,7 @@ export const useAuth = () => {
           id: data.user.id,
           email: data.user.email,
           plan_type: planType,
+          phone: phone,
           created_at: timestamp,
           updated_at: timestamp
         })

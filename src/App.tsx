@@ -20,6 +20,7 @@ import { Results } from "./pages/Results";
 import { ElectionDetails } from "./pages/ElectionDetails";
 import { ThankYou } from "./pages/ThankYou";
 import HomeN from "./pages/HomeN";
+import { Support } from "./pages/Support";
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,10 @@ const router = createBrowserRouter(
       <Route
         path="vote/:electionId/thank-you"
         element={<ThankYou />}
+      />
+      <Route
+        path="vote/:electionId/support"
+        element={<Support />}
       />
     </Route>
   )

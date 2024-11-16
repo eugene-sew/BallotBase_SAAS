@@ -1,14 +1,15 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
-import { useAuth } from '../hooks/useAuth';
-import { AuthForm } from '../components/AuthForm';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { useAuth } from "../hooks/useAuth";
+import { AuthForm } from "../components/AuthForm";
 
 interface RegisterFormData {
   email: string;
   password: string;
-  planType: 'basic' | 'premium';
+  planType: "basic" | "premium";
+  phone: string;
 }
 
 export const Register: React.FC = () => {
@@ -16,17 +17,19 @@ export const Register: React.FC = () => {
   const navigate = useNavigate();
   const form = useForm<RegisterFormData>({
     defaultValues: {
-      planType: 'basic'
-    }
+      planType: "basic",
+    },
   });
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await signUp(data.email, data.password, data.planType);
-      toast.success('Registration successful! Please check your email to verify your account.');
-      navigate('/login');
+      await signUp(data.email, data.password, data.planType, data.phone);
+      toast.success(
+        "Registration successful! Please check your email to verify your account."
+      );
+      navigate("/login");
     } catch (error) {
-      toast.error('Registration failed. Please try again.');
+      toast.error("Registration failed. Please try again.");
     }
   };
 
@@ -39,10 +42,11 @@ export const Register: React.FC = () => {
         onSubmit={onSubmit}
         buttonText="Register"
         showPlanSelect
+        showPhoneInput
         altLink={{
           text: "Already have an account?",
           linkText: "Sign In",
-          to: "/login"
+          to: "/login",
         }}
       />
     </div>

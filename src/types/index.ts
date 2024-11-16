@@ -3,6 +3,7 @@ export interface User {
   email: string;
   planType: 'basic' | 'premium';
   photoURL?: string;
+  phone?: string;
 }
 
 export interface Election {

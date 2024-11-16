@@ -6,7 +6,6 @@ import { ResultsChart } from "../components/ResultsChart";
 import { useAuth } from "../hooks/useAuth";
 import type { Portfolio, Candidate, Vote, Election } from "../types";
 import toast from "react-hot-toast";
-import { ShareIcon } from "lucide-react";
 
 export const Results: React.FC = () => {
   const { electionId } = useParams();
@@ -32,7 +31,11 @@ export const Results: React.FC = () => {
     setIsPublished(election?.is_published);
   }, [election]);
 
-  const { data: results, isLoading } = useQuery(
+  const {
+    data: results,
+    isLoading,
+    isFetching,
+  } = useQuery(
     ["results", electionId],
     async () => {
       const { data: portfolios, error: portfoliosError } = await supabase
@@ -57,6 +60,9 @@ export const Results: React.FC = () => {
           ).length,
         })),
       }));
+    },
+    {
+      refetchInterval: 60000, // Refresh data every 1 minute (60000ms)
     }
   );
 
@@ -131,6 +137,13 @@ export const Results: React.FC = () => {
               </button>
             ))}
         </div>
+
+        {/* Show refreshing state */}
+        {isFetching && (
+          <div className="text-sm text-gray-500 mb-4">
+            Refreshing results...
+          </div>
+        )}
 
         {/* Display Results with Charts */}
         {results?.map((portfolio: any) => (

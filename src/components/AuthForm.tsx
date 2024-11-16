@@ -10,6 +10,7 @@ interface AuthFormProps {
   onSubmit: (data: any) => Promise<void>;
   buttonText: string;
   showPlanSelect?: boolean;
+  showPhoneInput?: boolean;
   altLink: {
     text: string;
     linkText: string;
@@ -24,6 +25,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   onSubmit,
   buttonText,
   showPlanSelect,
+  showPhoneInput,
   altLink,
 }) => {
   const {
@@ -63,6 +65,34 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
           )}
         </div>
+
+        {showPhoneInput && ( // Conditionally show phone input
+          <div>
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-700">
+              Phone Number
+            </label>
+            <input
+              id="phone"
+              type="tel"
+              placeholder="233123456789"
+              {...register("phone", {
+                required: "Phone is required",
+                pattern: {
+                  value: /^\d{12}$/,
+                  message: "Invalid phone number",
+                },
+              })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary border-2"
+            />
+            {errors.phone && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.phone.message}
+              </p>
+            )}
+          </div>
+        )}
 
         <div>
           <label
